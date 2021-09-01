@@ -39,7 +39,7 @@ with open(file_to_load) as election_data:
     file_reader = csv.reader(election_data)
     # printing and skipping the header row
     headers = next(file_reader)
-    print(', '.join(headers))
+#    print(', '.join(headers))
 
     # for-loop to read data
     for row in file_reader:
@@ -56,7 +56,24 @@ with open(file_to_load) as election_data:
         # accumulate total votes
         total_votes += 1
 
-    print(f'total votes cast: {total_votes}\n')
+#    print(f'total votes cast: {total_votes}\n')
+
+# write to file
+with open(file_to_save, 'w') as outfile:
+
+    # outfile.write('Counties in the Election\n-------------------------\n')
+    # counties =['Arapahoe', 'Denver', 'Jefferson']
+    # outfile.write(', '.join(counties))
+
+    election_results = (
+        f'\nElection Results\n'
+        f'-------------------------\n'
+        f'Total Votes: {total_votes:,}\n'
+        f'-------------------------\n'
+    )
+    print(election_results, end='')
+
+    outfile.write(election_results)
 
     # winner summary variable set
     winning_candidate = ''
@@ -70,7 +87,8 @@ with open(file_to_load) as election_data:
         # find and print the percentage of total votes
         votes = candidate_votes[i]
         candidate_percent = 100 * float(votes) / float(total_votes)
-        print(f'{i} :: {candidate_percent: .1f}% ({votes:,})\n---------------------------------------')
+        cand_results = f'{i} :: {candidate_percent: .1f}% ({votes:,})\n'
+        outfile.write(cand_results)
 
         # find and declare a winner
         if (votes > winning_count) and (candidate_percent > winning_percentage):
@@ -79,21 +97,12 @@ with open(file_to_load) as election_data:
             winning_candidate = i
 
     winner_summary = (
-        '\n\n\n'
+        '\n'
         f'________WINNER_ALERT_______________________\n'
         f'Winner::             {winning_candidate}\n'
         f'Winning Vote Count:: {winning_count:,}\n'
         f'Winning Percent::    {winning_percentage:.1f}%\n'
         f'___________________________________________'
     )
-    print(winner_summary)
-
-
-# write to file
-with open(file_to_save, 'w') as outfile:
-
-    outfile.write('Counties in the Election\n-------------------------\n')
-    counties =['Arapahoe', 'Denver', 'Jefferson']
-    outfile.write(', '.join(counties))
-
-
+    # print(winner_summary)
+    outfile.write(winner_summary)
